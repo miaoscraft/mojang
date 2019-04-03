@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -16,16 +17,15 @@ type NameAndUUID struct {
 
 // GetUUID gets UUID by user name at a time.
 // when time is nil, the current time is used.
-func GetUUID(UserName string, time *time.Time) (nu NameAndUUID, err error) {
+func GetUUID(UserName string, time time.Time) (nu NameAndUUID, err error) {
 	//构造URL
 	u := url.URL{
-		Scheme: "https",
-		Host:   "api.mojang.com",
-		Path:   "users/profiles/minecraft/" + UserName,
+		Scheme:   "https",
+		Host:     "api.mojang.com",
+		Path:     "users/profiles/minecraft/" + UserName,
+		RawQuery: "at=" + strconv.FormatInt(time.Unix(), 10),
 	}
-	if time != nil {
-		u.RawQuery = fmt.Sprintf("at=%d", time.Unix())
-	}
+
 	//构造请求
 	var reque *http.Request
 	reque, err = http.NewRequest(http.MethodGet, u.String(), nil)
