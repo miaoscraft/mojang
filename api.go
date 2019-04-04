@@ -7,12 +7,24 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+
+	"github.com/satori/go.uuid"
 )
 
 //NameAndUUID store player name and UUID
 type NameAndUUID struct {
 	Name string `json:"name"`
 	UUID string `json:"id"`
+}
+
+//ToUUID get UUID and conver it to github.com/satori/go.uuid.UUID .
+// if nu.UUID cannot convert to uuid.UUID, panic.
+func (nu NameAndUUID) ToUUID() uuid.UUID {
+	u, err := uuid.FromString(nu.UUID)
+	if err != nil {
+		panic(err)
+	}
+	return u
 }
 
 // GetUUID gets UUID by user name at a time.
